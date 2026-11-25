@@ -91,13 +91,11 @@
   <div class="modal-backdrop" id="profileModal" aria-hidden="true">
     <div class="modal profile-modal">
       <div class="modal-heading"><span class="modal-icon sky"><i class="fa-solid fa-user-astronaut"></i></span><div><h2 data-i18n="profileTitle">玩家登記</h2><p data-i18n="profileSub">選擇你的班別及姓名，然後設定遊戲花名。</p></div></div>
-      <label for="groupSelect" data-i18n="groupLabel">1. 選擇經濟科組別</label>
-      <select id="groupSelect"><option value="">請選擇組別</option><option value="zh">中文班經濟</option><option value="en">English Economics</option></select>
-      <label for="classSelect" data-i18n="classLabel">2. 選擇班別</label>
-      <select id="classSelect" disabled><option value="">請先選擇組別</option></select>
-      <label for="studentSelect" data-i18n="studentLabel">3. 選擇你的姓名</label>
+      <label for="classSelect" data-i18n="classLabel">1. 選擇班別</label>
+      <select id="classSelect" disabled><option value="">請選擇班別</option></select>
+      <label for="studentSelect" data-i18n="studentLabel">2. 選擇你的真實姓名</label>
       <select id="studentSelect" disabled><option value="">請先選擇班別</option></select>
-      <label for="nicknameInput" data-i18n="nicknameLabel">4. 選擇你的遊戲花名</label>
+      <label for="nicknameInput" data-i18n="nicknameLabel">3. 設定你的遊戲花名</label>
       <div class="nickname-row"><input id="nicknameInput" maxlength="20" autocomplete="off" placeholder="例如：無形之手 / Econ Master"><button class="btn btn-dice" id="diceButton" type="button" title="隨機花名"><i class="fa-solid fa-dice"></i></button></div>
       <p class="field-help" data-i18n="nicknameHelp">花名會顯示在公開排行榜，真實姓名只供教師查看。</p>
       <p class="field-error" id="profileError" role="alert"></p>
