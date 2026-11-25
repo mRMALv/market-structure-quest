@@ -54,6 +54,7 @@
       group: attempt.group,
       score: score,
       durationMs: durationMs,
+      overtimeMs: Math.max(0, durationMs - 20 * 60 * 1000),
       completedAtMs: completedAtMs,
       sessionId: attempt.sessionId
     };
@@ -280,7 +281,9 @@
       const baseScore = stageScores.stage1 + stageScores.stage2A + stageScores.stage2B + stageScores.stage3;
       const bonus = streakBonus(attempt.maxCombo || 0);
       const now = stamp();
-      const durationMs = Math.max(0, now - attempt.startedAtMs);
+      const durationMs = Number.isFinite(payload.activeDurationMs) ? Math.max(0, payload.activeDurationMs) : Math.max(0, now - attempt.startedAtMs);
+      const timeLimitMs = Number.isFinite(payload.timeLimitMs) ? Math.max(0, payload.timeLimitMs) : 20 * 60 * 1000;
+      const overtimeMs = Math.max(0, durationMs - timeLimitMs);
       const stageDurations = {
         stage1: results.stage1.durationMs, stage2A: results.stage2A.durationMs,
         stage2B: results.stage2B.durationMs,
@@ -290,6 +293,8 @@
       const finalResult = {
         totalScore: baseScore + bonus, baseScore: baseScore, streakBonus: bonus,
         maxCombo: attempt.maxCombo || 0, durationMs: durationMs,
+        timeLimitMs: timeLimitMs, overtimeMs: overtimeMs, timedOut: overtimeMs > 0,
+        pausedDurationMs: Number.isFinite(payload.pausedDurationMs) ? Math.max(0, payload.pausedDurationMs) : 0,
         completedAtMs: now, stageScores: stageScores, stageDurations: stageDurations
       };
       const totalRef = boardRef(attempt.sessionId, "total", attempt.studentId);
@@ -297,6 +302,8 @@
       tx.update(ref, {
         status: "completed", completedAtMs: now, totalScore: finalResult.totalScore,
         baseScore: baseScore, streakBonus: bonus, totalDurationMs: durationMs,
+        timeLimitMs: timeLimitMs, overtimeMs: overtimeMs, timedOut: overtimeMs > 0,
+        pausedDurationMs: finalResult.pausedDurationMs,
         finalResult: finalResult, updatedAtMs: now
       });
       return finalResult;
@@ -319,7 +326,7 @@
       return {
         rank: i + 1, nickname: row.nickname, className: row.className,
         group: row.group, score: row.score, durationMs: row.durationMs,
-        completedAtMs: row.completedAtMs
+        overtimeMs: row.overtimeMs || 0, completedAtMs: row.completedAtMs
       };
     }) };
   }
