@@ -18,8 +18,10 @@
   function validateGroup(v) {
     if (v !== "zh" && v !== "en") throw new Error("經濟科組別不正確。");
   }
-  function validateClass(v) {
-    if (["4A", "4B", "4C", "4D"].indexOf(v) < 0) throw new Error("班別不正確。");
+  function validateClass(value) {
+    const normalized = typeof value === "string" ? value.replace(/\s+/g, "").toUpperCase() : "";
+    if (["4A", "4B", "4C", "4D"].indexOf(normalized) < 0) throw new Error("班別不正確。請輸入 4A、4B、4C 或 4D。");
+    return normalized;
   }
   function canStartStage(stage, results) {
     if (stage === "stage1") return true;
@@ -93,13 +95,13 @@
 
   async function getRoster(payload) {
     requireUser();
-    validateClass(payload.className);
+    const className = validateClass(payload.className);
     const snap = await db.collection("students").get();
     const students = snap.docs.map(function (doc) {
       const student = doc.data();
       return { id: doc.id, name: student.realName, className: student.className, active: student.active };
     }).filter(function (student) {
-      return student.className === payload.className && student.active === true;
+      return String(student.className || "").replace(/\s+/g, "").toUpperCase() === className && student.active === true;
     }).map(function (student) {
       return { id: student.id, name: student.name };
     }).sort(function (a, b) { return a.name.localeCompare(b.name, "zh-Hant"); });
@@ -357,11 +359,12 @@
     if (!Array.isArray(rows) || !rows.length || rows.length > 100) throw new Error("每次請匯入 1 至 100 位學生。");
     const batch = db.batch();
     for (const row of rows) {
-      validateGroup(row.group); validateClass(row.className);
+      validateGroup(row.group);
+      const className = validateClass(row.className);
       const realName = validateText(row.realName, "學生姓名", 80);
-      const id = await studentIdFor({ group: row.group, className: row.className, realName: realName });
+      const id = await studentIdFor({ group: row.group, className: className, realName: realName });
       batch.set(db.collection("students").doc(id), {
-        group: row.group, className: row.className, realName: realName,
+        group: row.group, className: className, realName: realName,
         active: true, importedAtMs: stamp()
       }, { merge: true });
     }
