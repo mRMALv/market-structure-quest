@@ -1,0 +1,128 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // IMPORTANT: replace this placeholder with the teacher account UID
+    // from Firebase Authentication before publishing these rules.
+    function isTeacher() {
+      return signedIn() && request.auth.uid == "Jd58CTwxDrNylxWHC5QbXhGgMVt2";
+    }
+
+    function ownsStudent(studentId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/students/$(studentId))
+        && get(/databases/$(database)/documents/students/$(studentId)).data.authUid == request.auth.uid;
+    }
+
+    function rosterFieldsMatch(studentId) {
+      return ownsStudent(studentId)
+        && get(/databases/$(database)/documents/students/$(studentId)).data.group == request.resource.data.group
+        && get(/databases/$(database)/documents/students/$(studentId)).data.className == request.resource.data.className;
+    }
+
+    function validBoardEntry(studentId) {
+      return signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.studentId == studentId
+        && rosterFieldsMatch(studentId)
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0
+        && request.resource.data.score <= 103
+        && request.resource.data.durationMs is int
+        && request.resource.data.durationMs >= 0
+        && request.resource.data.nickname is string
+        && request.resource.data.nickname.size() <= 20
+        && request.resource.data.className in ["4A", "4B", "4C", "4D"]
+        && request.resource.data.completedAtMs is int;
+    }
+
+    match /students/{studentId} {
+      // Spark mode lets signed-in students retrieve rosters for name selection.
+      // This means a student could inspect another class roster; do not upload
+      // sensitive data or use this mode where strict roster confidentiality is required.
+      allow read: if signedIn();
+
+      allow create, delete: if isTeacher();
+
+      allow update: if isTeacher()
+        || (
+          signedIn()
+          && (!('authUid' in resource.data) || resource.data.authUid == null || resource.data.authUid == request.auth.uid)
+          && request.resource.data.authUid == request.auth.uid
+          && request.resource.data.nickname is string
+          && request.resource.data.nickname.size() > 0
+          && request.resource.data.nickname.size() <= 20
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['authUid', 'nickname', 'nicknameUpdatedAt'])
+        );
+    }
+
+    match /attempts/{attemptId} {
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == "in_progress"
+        && rosterFieldsMatch(request.resource.data.studentId)
+        && request.resource.data.realName == get(/databases/$(database)/documents/students/$(request.resource.data.studentId)).data.realName;
+
+      allow read: if isTeacher()
+        || (signedIn() && resource.data.ownerUid == request.auth.uid);
+
+      // Spark mode has no trusted server endpoint. Owners can update their own
+      // practice attempt, so scores/timers are not tamper-resistant.
+      allow update: if isTeacher()
+        || (
+          signedIn()
+          && resource.data.ownerUid == request.auth.uid
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.studentId == resource.data.studentId
+          && request.resource.data.realName == resource.data.realName
+          && request.resource.data.group == resource.data.group
+          && request.resource.data.className == resource.data.className
+          && request.resource.data.nickname == resource.data.nickname
+          && request.resource.data.sessionId == resource.data.sessionId
+          && request.resource.data.startedAtMs == resource.data.startedAtMs
+          && request.resource.data.status in ["in_progress", "completed"]
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            "stageStarts", "stageResults", "combo", "maxCombo",
+            "stage1Score", "stage2AScore", "stage2BScore", "stage3Score",
+            "stage2DurationMs", "updatedAtMs", "status", "completedAtMs",
+            "totalScore", "baseScore", "streakBonus", "totalDurationMs", "finalResult"
+          ])
+        );
+
+      allow delete: if isTeacher();
+    }
+
+    match /sessions/{sessionId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher();
+
+      match /boards/{board}/entries/{studentId} {
+        allow read: if signedIn();
+        allow create: if validBoardEntry(studentId);
+        allow update: if validBoardEntry(studentId)
+          && (
+            request.resource.data.score > resource.data.score
+            || (
+              request.resource.data.score == resource.data.score
+              && request.resource.data.durationMs < resource.data.durationMs
+            )
+            || (
+              request.resource.data.score == resource.data.score
+              && request.resource.data.durationMs == resource.data.durationMs
+              && request.resource.data.completedAtMs < resource.data.completedAtMs
+            )
+          );
+        allow delete: if isTeacher();
+      }
+    }
+
+    match /settings/{settingId} {
+      allow read: if signedIn();
+      allow write: if isTeacher();
+    }
+  }
+}

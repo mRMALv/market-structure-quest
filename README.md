@@ -18,7 +18,7 @@
 - Firebase 專案：`monopoly-test-88b65`
 - 網頁端設定在 `site/firebase-config.js`。Firebase Web API key 是公開的前端識別設定，不是服務帳戶私鑰。
 - Firestore Rules 參考檔在 Repository 根目錄的 `firestore.rules`。Rules 必須在 Firebase Console 的 Firestore Rules 頁面發布。
-- Firebase Authentication 的 Authorized domains 必須加入 GitHub Pages 網域（例如 `mrm...github.io`，以實際發布網址為準），否則匿名學生登入可能被拒絕。
+- Firebase Authentication 的 Authorized domains 必須加入 GitHub Pages 網域（例如實際網站網址的 `github.io` 網域），否則匿名學生登入可能被拒絕。
 - 學生使用 Anonymous sign-in；老師使用 Email/Password sign-in。老師帳戶 UID 已寫入 `firestore.rules`。
 
 ## 老師使用
