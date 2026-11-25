@@ -56,8 +56,8 @@ async function createSession(){
 }
 function exportCsv(){
   const rows=dashboard&&dashboard.attempts||[];
-  const header=["realName","group","className","nickname","status","totalScore","stage1","stage1DurationMs","stage2A","stage2ADurationMs","stage2B","stage2BDurationMs","stage3","stage3DurationMs","maxCombo","totalDurationMs","startedAtMs","completedAtMs"];
-  const lines=[header.join(",")].concat(rows.map(a=>{const r=a.stageResults||{};const vals=[a.realName,a.group,a.className,a.nickname,a.status,a.totalScore||"",r.stage1&&r.stage1.score||"",r.stage1&&r.stage1.durationMs||"",r.stage2A&&r.stage2A.score||"",r.stage2A&&r.stage2A.durationMs||"",r.stage2B&&r.stage2B.score||"",r.stage2B&&r.stage2B.durationMs||"",r.stage3&&r.stage3.score||"",r.stage3&&r.stage3.durationMs||"",a.maxCombo||0,a.totalDurationMs||"",a.startedAtMs||"",a.completedAtMs||""];return vals.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",");}));
+  const header=["realName","group","className","nickname","status","totalScore","stage1","stage1DurationMs","stage2A","stage2ADurationMs","stage2B","stage2BDurationMs","stage3","stage3DurationMs","maxCombo","totalDurationMs","overtimeMs","startedAtMs","completedAtMs"];
+  const lines=[header.join(",")].concat(rows.map(a=>{const r=a.stageResults||{};const vals=[a.realName,a.group,a.className,a.nickname,a.status,a.totalScore||"",r.stage1&&r.stage1.score||"",r.stage1&&r.stage1.durationMs||"",r.stage2A&&r.stage2A.score||"",r.stage2A&&r.stage2A.durationMs||"",r.stage2B&&r.stage2B.score||"",r.stage2B&&r.stage2B.durationMs||"",r.stage3&&r.stage3.score||"",r.stage3&&r.stage3.durationMs||"",a.maxCombo||0,a.totalDurationMs||"",a.overtimeMs||0,a.startedAtMs||"",a.completedAtMs||""];return vals.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",");}));
   const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="market-structure-attempts.csv";a.click();URL.revokeObjectURL(url);
 }
 document.addEventListener("DOMContentLoaded",function(){
