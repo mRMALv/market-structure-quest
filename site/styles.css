@@ -20,3 +20,21 @@
 .mindmap-exam ol,.mindmap-traps ul{margin:0;padding-left:20px;font-size:12px;line-height:1.8}
 .mindmap-traps .exam-tip{margin-top:10px}
 @media(max-width:760px){.mindmap-columns{grid-template-columns:1fr}.mindmap-branch{padding:11px}.mindmap-node{grid-template-columns:110px 1fr;align-items:center}}
+
+/* Hierarchical mind map: perfect competition vs. imperfect competition */
+.mindmap-hierarchy{border:2px solid #c4b5fd;background:linear-gradient(120deg,#f5f3ff,#eff6ff);border-radius:18px;padding:17px;margin:12px 0 17px;text-align:center}
+.mindmap-hierarchy>h3{margin:0 0 13px;font-size:15px;color:#4338ca}
+.hierarchy-map{max-width:720px;margin:0 auto;position:relative;padding-top:2px}
+.hierarchy-root{display:inline-block;position:relative;background:#4f46e5;color:#fff;padding:10px 25px;border-radius:13px;font-weight:900;box-shadow:0 4px 0 #3730a3}
+.hierarchy-root:after{content:"";position:absolute;left:50%;top:100%;height:25px;border-left:2px solid #a5b4fc}
+.hierarchy-level{display:grid;grid-template-columns:1fr 1fr;gap:20px;position:relative;padding-top:25px;margin-top:0}
+.hierarchy-level:before{content:"";position:absolute;top:0;left:25%;right:25%;border-top:2px solid #a5b4fc}
+.hierarchy-node{position:relative;border:2px solid;border-radius:15px;padding:14px 12px;background:#fff;min-width:0}
+.hierarchy-node:before{content:"";position:absolute;left:50%;bottom:100%;height:25px;border-left:2px solid #a5b4fc}
+.hierarchy-node>b{display:block;font-size:14px}
+.hierarchy-node.perfect{border-color:#6ee7b7;background:#ecfdf5;color:#065f46}
+.hierarchy-node.imperfect{border-color:#fdba74;background:#fff7ed;color:#9a3412}
+.hierarchy-children{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #fed7aa}
+.hierarchy-children span{display:flex;align-items:center;justify-content:center;min-height:42px;padding:7px;background:#fff;border:1px solid #fdba74;border-radius:10px;color:#9a3412;font-size:11px;font-weight:900;line-height:1.45}
+.hierarchy-note{margin:12px 0 0;color:#64748b;font-size:11px;line-height:1.6}
+@media(max-width:600px){.mindmap-hierarchy{padding:13px 10px}.hierarchy-level{gap:8px}.hierarchy-node{padding:11px 7px}.hierarchy-node>b{font-size:12px}.hierarchy-children{grid-template-columns:1fr;gap:6px}.hierarchy-children span{min-height:34px;font-size:10px}}
