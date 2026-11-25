@@ -9,13 +9,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=20261125-3">
+  <link rel="stylesheet" href="styles.css?v=20261125-4">
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
   <script src="firebase-config.js"></script>
-  <script src="firebase-client.js?v=20261125-3"></script>
+  <script src="firebase-client.js?v=20261125-4"></script>
 </head>
 <body>
   <header class="topbar">
@@ -26,7 +26,7 @@
     <div class="hud" id="gameHud" hidden>
       <span class="hud-pill"><i class="fa-solid fa-star"></i><span data-i18n="score">分數</span> <b id="scoreValue">0</b></span>
       <span class="hud-pill combo"><i class="fa-solid fa-fire"></i><span data-i18n="combo">連勝</span> <b id="comboValue">0</b></span>
-      <span class="hud-pill"><i class="fa-regular fa-clock"></i><b id="timerValue">20:00</b><small id="overtimeValue" hidden></small></span>
+      <span class="hud-pill"><i class="fa-regular fa-clock"></i><b id="timerValue">15:00</b><small id="overtimeValue" hidden></small></span>
     </div>
     <div class="top-actions">
       <button class="ghost small" id="langToggle">EN / 繁中</button>
@@ -38,7 +38,7 @@
   <main class="page-shell">
     <div id="connectionNotice" class="notice notice-info" role="status">
       <i class="fa-solid fa-cloud"></i>
-      <span id="connectionText">正在連接遊戲資料庫…</span>
+      <span id="connectionText">正在準備挑戰…</span>
     </div>
 
     <section id="homeScreen" class="screen">
@@ -121,6 +121,6 @@
 
   <div id="toast" class="toast" role="status"></div>
   <script src="questions.js"></script>
-  <script src="app.js?v=20261125-3"></script>
+  <script src="app.js?v=20261125-4"></script>
 </body>
 </html>
