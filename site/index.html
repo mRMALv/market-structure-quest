@@ -43,15 +43,15 @@
 
     <section id="homeScreen" class="screen">
       <div class="hero card">
-        <span class="eyebrow"><i class="fa-solid fa-graduation-cap"></i> HKDSE ECONOMICS · MARKET STRUCTURES</span>
+        <span class="eyebrow" data-zh="HKDSE 經濟 · 市場結構" data-en="HKDSE ECONOMICS · MARKET STRUCTURES"><i class="fa-solid fa-graduation-cap"></i> HKDSE ECONOMICS · MARKET STRUCTURES</span>
         <h1 data-i18n="heroTitle">市場結構大挑戰</h1>
-        <h2>完全競爭 <span>×</span> 壟斷性競爭 <span>×</span> 寡頭壟斷</h2>
+        <h2 data-zh="完全競爭 × 壟斷性競爭 × 寡頭壟斷" data-en="Perfect Competition × Monopolistic Competition × Oligopoly">完全競爭 × 壟斷性競爭 × 寡頭壟斷</h2>
         <p data-i18n="heroDescription">化身精明商家與市場鑑定師！完成四個互動遊戲，掌握市場結構的核心概念與考試應用。</p>
         <div class="stage-preview">
-          <article class="preview preview-green"><span>01</span><i class="fa-solid fa-chess-knight"></i><h3>商戰決策室</h3><p>3 個商業情境 · 30 分</p></article>
-          <article class="preview preview-orange"><span>02A</span><i class="fa-solid fa-layer-group"></i><h3>特徵分類大作戰</h3><p>8 張分類卡 · 16 分</p></article>
-          <article class="preview preview-blue"><span>02B</span><i class="fa-solid fa-bolt"></i><h3>市場結構閃電判斷</h3><p>10 道快問快答 · 30 分</p></article>
-          <article class="preview preview-purple"><span>03</span><i class="fa-solid fa-magnifying-glass-chart"></i><h3>真實案例鑑定師</h3><p>4 道應用題 · 24 分</p></article>
+          <article class="preview preview-green"><span>01</span><i class="fa-solid fa-chess-knight"></i><h3 data-zh="商戰決策室" data-en="Business Decisions">商戰決策室</h3><p data-zh="3 個商業情境 · 30 分" data-en="3 business scenarios · 30 points">3 個商業情境 · 30 分</p></article>
+          <article class="preview preview-orange"><span>02A</span><i class="fa-solid fa-layer-group"></i><h3 data-zh="特徵分類大作戰" data-en="Market Feature Sorting">特徵分類大作戰</h3><p data-zh="8 張分類卡 · 16 分" data-en="8 sorting cards · 16 points">8 張分類卡 · 16 分</p></article>
+          <article class="preview preview-blue"><span>02B</span><i class="fa-solid fa-bolt"></i><h3 data-zh="市場結構閃電判斷" data-en="Market Structure Quick Quiz">市場結構閃電判斷</h3><p data-zh="10 道快問快答 · 30 分" data-en="10 quick questions · 30 points">10 道快問快答 · 30 分</p></article>
+          <article class="preview preview-purple"><span>03</span><i class="fa-solid fa-magnifying-glass-chart"></i><h3 data-zh="真實案例鑑定師" data-en="Case Study Detective">真實案例鑑定師</h3><p data-zh="4 道應用題 · 24 分" data-en="4 application questions · 24 points">4 道應用題 · 24 分</p></article>
         </div>
         <div class="hero-actions">
           <button class="btn btn-primary btn-large" id="startButton" disabled><i class="fa-solid fa-rocket"></i> <span data-i18n="start">開始挑戰！</span></button>
@@ -107,24 +107,15 @@
   <div class="modal-backdrop" id="leaderboardModal" aria-hidden="true">
     <div class="modal wide-modal">
       <div class="modal-heading"><span class="modal-icon gold"><i class="fa-solid fa-ranking-star"></i></span><div><h2 data-i18n="leaderboardTitle">跨班英雄榜</h2><p data-i18n="leaderboardHint">只顯示學生花名及班別；未有真實成績時不會顯示預設紀錄。</p></div><button class="icon-button" onclick="closeModal('leaderboardModal')" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-      <div class="tabs" id="leaderboardTabs"><button class="active" data-board="total">總分榜</button><button data-board="stage1">關卡 1</button><button data-board="stage2">關卡 2</button><button data-board="stage3">關卡 3</button></div>
-      <div id="leaderboardList" class="leaderboard-list"><div class="empty-state"><i class="fa-solid fa-trophy"></i><b>暫時未有學生成績</b><span>完成挑戰後，真實成績會在這裏顯示。</span></div></div>
+      <div class="tabs" id="leaderboardTabs"><button class="active" data-board="total" data-zh="總分榜" data-en="Overall">總分榜</button><button data-board="stage1" data-zh="關卡 1" data-en="Stage 1">關卡 1</button><button data-board="stage2" data-zh="關卡 2" data-en="Stage 2">關卡 2</button><button data-board="stage3" data-zh="關卡 3" data-en="Stage 3">關卡 3</button></div>
+      <div id="leaderboardList" class="leaderboard-list"><div class="empty-state"><i class="fa-solid fa-trophy"></i><b data-zh="暫時未有學生成績" data-en="No student results yet">暫時未有學生成績</b><span data-zh="完成挑戰後，真實成績會在這裏顯示。" data-en="Completed results will appear here.">完成挑戰後，真實成績會在這裏顯示。</span></div></div>
     </div>
   </div>
 
   <div class="modal-backdrop" id="mindmapModal" aria-hidden="true">
     <div class="modal mindmap-modal">
       <div class="modal-heading"><span class="modal-icon violet"><i class="fa-solid fa-diagram-project"></i></span><div><h2 data-i18n="mindmapTitle">市場結構知識腦圖</h2><p>Perfect Competition · Monopolistic Competition · Oligopoly</p></div><button class="icon-button" onclick="closeModal('mindmapModal')" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-      <div class="mindmap-tree"><div class="tree-root">市場結構 Market Structure</div><div class="tree-branches"><span class="tree-leaf green">完全競爭<br>Perfect Competition</span><span class="tree-leaf orange">壟斷性競爭<br>Monopolistic Competition</span><span class="tree-leaf blue">寡頭壟斷<br>Oligopoly</span></div></div>
-      <div class="table-wrap"><table class="mindmap-table"><thead><tr><th>比較範疇</th><th>完全競爭</th><th>壟斷性競爭</th><th>寡頭壟斷</th></tr></thead><tbody>
-        <tr><th>賣家數目</th><td>大量細小賣家</td><td>大量細小賣家</td><td>數名具支配力賣家</td></tr>
-        <tr><th>進出市場</th><td>自由進出（理論假設）</td><td>自由進出</td><td>存在入行障礙</td></tr>
-        <tr><th>物品性質</th><td>同質物品</td><td>異質物品</td><td>同質或異質物品</td></tr>
-        <tr><th>市場資訊</th><td>完全市場資訊</td><td>不完全市場資訊</td><td>不完全市場資訊</td></tr>
-        <tr><th>訂價角色</th><td>受價者</td><td>尋價者</td><td>尋價者；策略互相依存</td></tr>
-        <tr><th>競爭形式</th><td>無需價格或非價格競爭</td><td>價格及非價格競爭</td><td>較常採用非價格競爭；價格偏向僵固</td></tr>
-      </tbody></table></div>
-      <div class="exam-tip"><b><i class="fa-solid fa-lightbulb"></i> HKDSE 提提你</b><p>完全競爭的假設包括同質物品及完全市場資訊。寡頭壟斷的關鍵是市場上有數名具支配力的賣家；市場亦可以同時存在細小賣家。</p></div>
+      <div id="mindmapContent"></div>
     </div>
   </div>
 
