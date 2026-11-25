@@ -56,7 +56,7 @@
       group: attempt.group,
       score: score,
       durationMs: durationMs,
-      overtimeMs: Math.max(0, durationMs - 20 * 60 * 1000),
+      overtimeMs: Math.max(0, durationMs - 15 * 60 * 1000),
       completedAtMs: completedAtMs,
       sessionId: attempt.sessionId
     };
@@ -284,7 +284,7 @@
       const bonus = streakBonus(attempt.maxCombo || 0);
       const now = stamp();
       const durationMs = Number.isFinite(payload.activeDurationMs) ? Math.max(0, payload.activeDurationMs) : Math.max(0, now - attempt.startedAtMs);
-      const timeLimitMs = Number.isFinite(payload.timeLimitMs) ? Math.max(0, payload.timeLimitMs) : 20 * 60 * 1000;
+      const timeLimitMs = Number.isFinite(payload.timeLimitMs) ? Math.max(0, payload.timeLimitMs) : 15 * 60 * 1000;
       const overtimeMs = Math.max(0, durationMs - timeLimitMs);
       const stageDurations = {
         stage1: results.stage1.durationMs, stage2A: results.stage2A.durationMs,

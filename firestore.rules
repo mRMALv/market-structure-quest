@@ -89,7 +89,7 @@ service cloud.firestore {
             "stageStarts", "stageResults", "combo", "maxCombo",
             "stage1Score", "stage2AScore", "stage2BScore", "stage3Score",
             "stage2DurationMs", "updatedAtMs", "status", "completedAtMs",
-            "totalScore", "baseScore", "streakBonus", "totalDurationMs", "finalResult"
+            "totalScore", "baseScore", "streakBonus", "totalDurationMs", "timeLimitMs", "overtimeMs", "timedOut", "pausedDurationMs", "finalResult"
           ])
         );
 
