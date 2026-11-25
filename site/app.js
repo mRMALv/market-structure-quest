@@ -23,7 +23,7 @@
   function esc(value){return String(value == null ? "" : value).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
   function shuffle(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
   function formatDuration(ms){const sec=Math.max(0,Math.floor((ms||0)/1000));return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");}
-  function formatDate(ms){if(!ms)return "—";return new Intl.DateTimeFormat("zh-HK",{timeZone:"Asia/Hong_Kong",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date(ms));}
+  function formatDate(ms){if(!ms)return "—";return new Intl.DateTimeFormat(state.lang==="zh"?"zh-HK":"en-GB",{timeZone:"Asia/Hong_Kong",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date(ms));}
   function notify(message){$("toast").textContent=message;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2600);}
   function showNotice(message,type){const el=$("connectionNotice");el.className="notice notice-"+type;$("connectionText").textContent=message;}
   function call(name,payload){if(!window.MSQ)return Promise.reject(new Error("Firebase 尚未設定。"));return window.MSQ.call(name,payload||{});}
