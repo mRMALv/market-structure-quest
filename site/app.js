@@ -75,7 +75,14 @@
   function renderMindMap(){
     const zh=state.lang==="zh";
     const labels=zh?{
-      root:"市場結構",sub:"三大市場結構比較與判斷",
+      hierarchyTitle:"市場結構的分類",
+      root:"市場結構",
+      perfect:"完全競爭",
+      imperfect:"不完全競爭",
+      monopolistic:"壟斷性競爭",
+      oligopoly:"寡頭壟斷",
+      hierarchyNote:"壟斷性競爭及寡頭壟斷，都是不完全競爭市場之下的分支。",
+      sub:"三大市場結構的詳細特徵比較",
       seller:"賣家數目",entry:"進出市場",goods:"物品性質",info:"市場資訊",price:"訂價角色",comp:"競爭方式",examples:"常見例子",
       pc:["完全競爭","大量細小賣家","自由進出（理論假設）","同質物品","完全市場資訊","受價者","主要依靠價格競爭；個別賣家不能以廣告建立差異","農產品的理論模型、標準化商品模型"],
       mc:["壟斷性競爭","大量細小賣家","相對自由進出","異質物品（產品差異化）","不完全市場資訊","尋價者","價格及非價格競爭；品牌、服務、位置及廣告","餐廳、咖啡店、髮型屋"],
@@ -83,7 +90,14 @@
       clue:"考試判斷流程",c1:"先看市場是否由數名具支配力賣家主導",c2:"若不是，再看賣家是否大量而且物品有否差異化",c3:"只有同時符合大量細小賣家、同質物品及完全資訊等假設，才是完全競爭",
       traps:"常見失分位",trap1:"賣家多，不代表一定是完全競爭。",trap2:"寡頭壟斷不代表市場只有幾間公司；小型賣家仍可存在。",trap3:"寡頭壟斷可出售同質或異質物品。",tip:"HKDSE 提提你：用賣家數目、進出障礙、物品性質及資訊完整程度一併判斷，不要只看單一特徵。"
     }:{
-      root:"Market Structures",sub:"Compare and identify the three market structures",
+      hierarchyTitle:"Classification of Market Structures",
+      root:"Market Structures",
+      perfect:"Perfect Competition",
+      imperfect:"Imperfect Competition",
+      monopolistic:"Monopolistic Competition",
+      oligopoly:"Oligopoly",
+      hierarchyNote:"Monopolistic competition and oligopoly are both branches of imperfect competition.",
+      sub:"Detailed comparison of the three market structures",
       seller:"Number of sellers",entry:"Entry and exit",goods:"Nature of goods",info:"Market information",price:"Pricing role",comp:"Forms of competition",examples:"Typical examples",
       pc:["Perfect Competition","Many small sellers","Free entry and exit (theoretical assumption)","Homogeneous goods","Perfect market information","Price takers","Mainly price competition; individual sellers cannot create an advertising advantage","Theoretical agricultural and standardized-goods models"],
       mc:["Monopolistic Competition","Many small sellers","Relatively free entry and exit","Heterogeneous goods (product differentiation)","Imperfect market information","Price searchers","Price and non-price competition: branding, service, location and advertising","Restaurants, cafés and hair salons"],
@@ -94,7 +108,9 @@
     const structures=[labels.pc,labels.mc,labels.ol];
     const classes=["green","orange","blue"];
     const features=[labels.seller,labels.entry,labels.goods,labels.info,labels.price,labels.comp,labels.examples];
-    const html='<div class="mindmap-tree"><div class="tree-root">'+labels.root+'</div><p class="mindmap-sub">'+labels.sub+'</p><div class="mindmap-columns">'+structures.map(function(s,i){return '<section class="mindmap-branch '+classes[i]+'"><h3>'+s[0]+'</h3>'+features.map(function(f,j){return '<div class="mindmap-node"><b>'+f+'</b><span>'+s[j+1]+'</span></div>';}).join('')+'</section>';}).join('')+'</div></div><section class="mindmap-exam"><h3>'+labels.clue+'</h3><ol><li>'+labels.c1+'</li><li>'+labels.c2+'</li><li>'+labels.c3+'</li></ol></section><section class="mindmap-traps"><h3>'+labels.traps+'</h3><ul><li>'+labels.trap1+'</li><li>'+labels.trap2+'</li><li>'+labels.trap3+'</li></ul><div class="exam-tip"><b>'+labels.tip+'</b></div></section>';
+    const hierarchy='<section class="mindmap-hierarchy"><h3>'+labels.hierarchyTitle+'</h3><div class="hierarchy-map"><div class="hierarchy-root">'+labels.root+'</div><div class="hierarchy-level"><div class="hierarchy-node perfect"><b>'+labels.perfect+'</b></div><div class="hierarchy-node imperfect"><b>'+labels.imperfect+'</b><div class="hierarchy-children"><span>'+labels.monopolistic+'</span><span>'+labels.oligopoly+'</span></div></div></div></div><p class="hierarchy-note">'+labels.hierarchyNote+'</p></section>';
+    const comparison='<div class="mindmap-tree"><div class="tree-root">'+labels.sub+'</div><div class="mindmap-columns">'+structures.map(function(s,i){return '<section class="mindmap-branch '+classes[i]+'"><h3>'+s[0]+'</h3>'+features.map(function(f,j){return '<div class="mindmap-node"><b>'+f+'</b><span>'+s[j+1]+'</span></div>';}).join('')+'</section>';}).join('')+'</div></div>';
+    const html=hierarchy+comparison+'<section class="mindmap-exam"><h3>'+labels.clue+'</h3><ol><li>'+labels.c1+'</li><li>'+labels.c2+'</li><li>'+labels.c3+'</li></ol></section><section class="mindmap-traps"><h3>'+labels.traps+'</h3><ul><li>'+labels.trap1+'</li><li>'+labels.trap2+'</li><li>'+labels.trap3+'</li></ul><div class="exam-tip"><b>'+labels.tip+'</b></div></section>';
     const target=$("mindmapContent");if(target)target.innerHTML=html;
   }
   function openMindMap(){if(state.attemptId&&state.stage!=="home"&&state.stage!=="result")pauseTimer();showModal("mindmapModal");}
