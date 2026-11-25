@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "site/**"
+      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -48,4 +49,4 @@ jobs:
     steps:
       - name: Publish website
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1
