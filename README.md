@@ -13,6 +13,16 @@
 
 每次把變更推送到 `main` 分支，GitHub Actions 會檢查 JavaScript 語法並自動發布 `site/` 資料夾到 GitHub Pages。亦可在 GitHub 的 Actions 頁面手動執行發布 Workflow。
 
+## GitHub Pages 首次啟用（只需一次）
+
+因 GitHub Actions 的預設 `GITHUB_TOKEN` 不能替 Repository 建立 Pages 網站，Repository 擁有人需要先在 GitHub 網頁設定一次：
+
+1. 開啟 Repository → **Settings** → **Pages**。
+2. 在 **Build and deployment** 的 **Source** 選擇 **GitHub Actions**。
+3. 不用選 branch，也不用建立另一個 workflow；本 Repository 已有 `.github/workflows/deploy-pages.yml`。
+
+完成後，往後提交 `site/` 內的網站更新便會自動發布。此設定與 Firebase Authentication 的 Authorized domains 是兩回事。
+
 ## Firebase 設定
 
 - Firebase 專案：`monopoly-test-88b65`
