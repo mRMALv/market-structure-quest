@@ -27,9 +27,22 @@ function render(){
   $("studentCount").textContent=students.length;$("attemptCount").textContent=attempts.length;
   const active=(dashboard.sessions||[]).find(s=>s.id===dashboard.activeSessionId);
   $("activeSessionText").textContent="目前場次："+(active?active.title:"尚未建立");
-  $("studentsBody").innerHTML=students.sort((a,b)=>a.className.localeCompare(b.className)||a.realName.localeCompare(b.realName,"zh-Hant")).map(s=>"<tr><td>"+(s.group==="zh"?"中文班":"英文班")+"</td><td>"+escapeHtml(s.className)+"</td><td>"+escapeHtml(s.realName)+"</td><td>"+escapeHtml(s.nickname||"—")+"</td></tr>").join("")||'<tr><td colspan="4">尚未匯入學生名單</td></tr>';
-  $("attemptsBody").innerHTML=attempts.map(a=>{const r=a.stageResults||{},sc=a.finalResult&&a.finalResult.stageScores||{};const total=a.status==="completed"?(a.totalScore||0):"—";return "<tr><td>"+escapeHtml(a.realName)+"</td><td>"+escapeHtml(a.className)+"</td><td>"+escapeHtml(a.nickname)+"</td><td>"+(a.status==="completed"?"完成":"進行中")+"</td><td>"+total+"</td><td>"+(r.stage1?r.stage1.score+"/30":"—")+"</td><td>"+duration(r.stage1&&r.stage1.durationMs)+"</td><td>"+(r.stage2A?r.stage2A.score+"/16":"—")+"</td><td>"+duration(r.stage2A&&r.stage2A.durationMs)+"</td><td>"+(r.stage2B?r.stage2B.score+"/30":"—")+"</td><td>"+duration(r.stage2B&&r.stage2B.durationMs)+"</td><td>"+(r.stage3?r.stage3.score+"/24":"—")+"</td><td>"+duration(r.stage3&&r.stage3.durationMs)+"</td><td>"+duration(a.totalDurationMs||0)+"</td><td>"+date(a.completedAtMs)+"</td></tr>";}).join("")||'<tr><td colspan="15">尚未有挑戰紀錄</td></tr>';
+  $("studentsBody").innerHTML=students.sort((a,b)=>a.className.localeCompare(b.className)||a.realName.localeCompare(b.realName,"zh-Hant")).map(s=>"<tr><td>"+escapeHtml(s.className)+"</td><td>"+escapeHtml(s.realName)+"</td><td>"+escapeHtml(s.nickname||"學生尚未選擇")+"</td></tr>").join("")||'<tr><td colspan="3">尚未新增學生名單</td></tr>';
+  $("attemptsBody").innerHTML=attempts.map(a=>{const r=a.stageResults||{};const total=a.status==="completed"?(a.totalScore||0):"—";return "<tr><td>"+escapeHtml(a.realName)+"</td><td>"+escapeHtml(a.className)+"</td><td>"+escapeHtml(a.nickname)+"</td><td>"+(a.status==="completed"?"完成":"進行中")+"</td><td>"+total+"</td><td>"+(r.stage1?r.stage1.score+"/30":"—")+"</td><td>"+duration(r.stage1&&r.stage1.durationMs)+"</td><td>"+(r.stage2A?r.stage2A.score+"/16":"—")+"</td><td>"+duration(r.stage2A&&r.stage2A.durationMs)+"</td><td>"+(r.stage2B?r.stage2B.score+"/30":"—")+"</td><td>"+duration(r.stage2B&&r.stage2B.durationMs)+"</td><td>"+(r.stage3?r.stage3.score+"/24":"—")+"</td><td>"+duration(r.stage3&&r.stage3.durationMs)+"</td><td>"+duration(a.totalDurationMs||0)+"</td><td>"+duration(a.overtimeMs||0)+"</td><td>"+date(a.completedAtMs)+"</td></tr>";}).join("")||'<tr><td colspan="16">尚未有挑戰紀錄</td></tr>';
 }
+async function addStudent(){
+  const className=$("studentClassInput").value.trim().toUpperCase();
+  const realName=$("studentRealNameInput").value.trim();
+  if(!className||!realName){$("importStatus").textContent="請輸入學生班級及真實姓名。";return;}
+  try{
+    const result=await call("adminAddStudent",{className:className,realName:realName});
+    $("importStatus").textContent="已新增："+result.className+" · "+result.realName+"。學生花名由學生自行設定。";
+    $("studentClassInput").value="";
+    $("studentRealNameInput").value="";
+    await refresh();
+  }catch(e){$("importStatus").textContent="新增失敗："+e.message;}
+}
+
 async function importRoster(){
   const file=$("rosterFile").files[0];if(!file){$("importStatus").textContent="請先選擇 CSV 檔案。";return;}
   try{const rows=parseCsv(await file.text());if(rows.length>100)throw new Error("一次最多匯入 100 位學生。");const result=await call("adminImportRoster",{students:rows});$("importStatus").textContent="成功匯入 "+result.imported+" 位學生。";await refresh();}
@@ -52,7 +65,7 @@ document.addEventListener("DOMContentLoaded",function(){
   window.MSQ.init(window.FIREBASE_CONFIG).then(()=>{
     auth=window.MSQ.auth();
     $("loginButton").onclick=login;$("logoutButton").onclick=()=>auth.signOut().then(()=>{$("dashboardPanel").hidden=true;$("loginPanel").hidden=false;});
-    $("importButton").onclick=importRoster;$("newSessionButton").onclick=createSession;$("refreshButton").onclick=refresh;$("exportButton").onclick=exportCsv;
+    $("addStudentButton").onclick=addStudent;$("newSessionButton").onclick=createSession;$("refreshButton").onclick=refresh;$("exportButton").onclick=exportCsv;
     auth.onAuthStateChanged(user=>{if(user&&!user.isAnonymous)refresh();else{$("dashboardPanel").hidden=true;$("loginPanel").hidden=false;}});
   }).catch(e=>{showError("Firebase 初始化失敗："+e.message);$("loginButton").disabled=true;});
 });
