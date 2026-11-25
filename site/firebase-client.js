@@ -92,12 +92,8 @@
 
   async function getRoster(payload) {
     requireUser();
-    validateGroup(payload.group);
     validateClass(payload.className);
-    // Query only the single indexed group field, then filter class/active status
-    // in memory to avoid requiring a composite Firestore index for setup.
-    const snap = await db.collection("students")
-      .where("group", "==", payload.group).get();
+    const snap = await db.collection("students").get();
     const students = snap.docs.map(function (doc) {
       const student = doc.data();
       return { id: doc.id, name: student.realName, className: student.className, active: student.active };
@@ -335,6 +331,19 @@
     return Array.from(new Uint8Array(digest)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("").slice(0, 28);
   }
 
+  async function adminAddStudent(payload) {
+    requireUser();
+    const className = validateClass(payload.className);
+    const realName = validateText(payload.realName, "學生姓名", 80);
+    const group = "zh";
+    const id = await studentIdFor({ group: group, className: className, realName: realName });
+    await db.collection("students").doc(id).set({
+      group: group, className: className, realName: realName,
+      active: true, importedAtMs: stamp()
+    }, { merge: true });
+    return { added: true, className: className, realName: realName };
+  }
+
   async function adminImportRoster(payload) {
     requireUser();
     const rows = payload.students;
@@ -385,7 +394,7 @@
     getPublicState: getPublicState, getRoster: getRoster, registerStudent: registerStudent,
     startAttempt: startAttempt, startStage: startStage, submitStage: submitStage,
     completeAttempt: completeAttempt, getLeaderboard: getLeaderboard,
-    adminImportRoster: adminImportRoster, adminCreateSession: adminCreateSession,
+    adminAddStudent: adminAddStudent, adminImportRoster: adminImportRoster, adminCreateSession: adminCreateSession,
     adminGetDashboard: adminGetDashboard
   };
   global.MSQ = {
