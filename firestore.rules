@@ -11,14 +11,16 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == "Jd58CTwxDrNylxWHC5QbXhGgMVt2";
     }
 
-    function ownsStudent(studentId) {
+    // Students select their classroom roster identity each time they play.
+    // Do not bind a roster record to one anonymous Firebase UID or one device.
+    function activeStudent(studentId) {
       return signedIn()
         && exists(/databases/$(database)/documents/students/$(studentId))
-        && get(/databases/$(database)/documents/students/$(studentId)).data.authUid == request.auth.uid;
+        && get(/databases/$(database)/documents/students/$(studentId)).data.active == true;
     }
 
     function rosterFieldsMatch(studentId) {
-      return ownsStudent(studentId)
+      return activeStudent(studentId)
         && get(/databases/$(database)/documents/students/$(studentId)).data.group == request.resource.data.group
         && get(/databases/$(database)/documents/students/$(studentId)).data.className == request.resource.data.className;
     }
@@ -50,13 +52,11 @@ service cloud.firestore {
       allow update: if isTeacher()
         || (
           signedIn()
-          && (!('authUid' in resource.data) || resource.data.authUid == null || resource.data.authUid == request.auth.uid)
-          && request.resource.data.authUid == request.auth.uid
           && request.resource.data.nickname is string
           && request.resource.data.nickname.size() > 0
           && request.resource.data.nickname.size() <= 20
           && request.resource.data.diff(resource.data).affectedKeys()
-               .hasOnly(['authUid', 'nickname', 'nicknameUpdatedAt'])
+               .hasOnly(['nickname', 'nicknameUpdatedAt'])
         );
     }
 

@@ -117,8 +117,9 @@
     const snap = await ref.get();
     if (!snap.exists || snap.data().active !== true) throw new Error("名單中找不到這位學生，請重新選擇。");
     const student = snap.data();
-    if (student.authUid && student.authUid !== user.uid) throw new Error("此姓名已在另一個瀏覽器登記。如有需要，請老師協助處理。");
-    await ref.update({ authUid: user.uid, nickname: nickname, nicknameUpdatedAt: stamp() });
+    // A roster name is a classroom identity, not a one-device account.
+    // Students may choose the same roster record on another browser and replay.
+    await ref.update({ nickname: nickname, nicknameUpdatedAt: stamp() });
     return { studentId: studentId, name: student.realName, className: student.className, group: student.group, nickname: nickname };
   }
 
@@ -129,7 +130,9 @@
     const studentSnap = await studentRef.get();
     if (!studentSnap.exists) throw new Error("找不到學生名單。");
     const student = studentSnap.data();
-    if (student.active !== true || student.authUid !== user.uid) throw new Error("學生身份未確認，請重新登記。");
+    if (student.active !== true) throw new Error("學生名單已停用，請通知老師。");
+    const nickname = validateText(payload.nickname, "遊戲花名", 20);
+    if (/[<>]/.test(nickname)) throw new Error("遊戲花名不能包含 < 或 >。");
     const activeSnap = await db.collection("settings").doc("activeSession").get();
     if (!activeSnap.exists || !activeSnap.data().sessionId) throw new Error("老師尚未開放挑戰場次。");
     const sessionId = activeSnap.data().sessionId;
@@ -137,7 +140,7 @@
     const ref = db.collection("attempts").doc();
     await ref.set({
       ownerUid: user.uid, studentId: studentId, realName: student.realName,
-      nickname: student.nickname || "Economics Player", group: student.group,
+      nickname: nickname, group: student.group,
       className: student.className, sessionId: sessionId, status: "in_progress",
       startedAtMs: now, stageStarts: {}, stageResults: {}, combo: 0, maxCombo: 0,
       createdAtMs: now, updatedAtMs: now
